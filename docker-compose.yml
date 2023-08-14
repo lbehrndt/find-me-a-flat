@@ -1,0 +1,19 @@
+version: '3'
+services:
+  server:
+    build: .
+    command: npm run dev
+    volumes:
+      - .:/~/Desktop/projects/find-me-a-flat
+      - /Users/lbehrndt/Desktop/projects/find-me-a-flat/node_modules
+    ports:
+      - 80:8080
+    depends_on:
+      - mysql
+    environment:
+      - DATABASE_URL=mysql://rooms@mysql/rooms
+  
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD="root"
