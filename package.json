@@ -1,0 +1,14 @@
+{
+    "name": "find-me-a-flat",
+    "version": "1.0.0",
+    "main": "app.js",
+    "author": "Leon Behrndt",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^1.4.0",
+        "cheerio": "^1.0.0-rc.12",
+        "dotenv": "^16.3.1",
+        "lowdb": "^6.0.1",
+        "mysql": "^2.18.1"
+    }
+}
