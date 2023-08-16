@@ -5,14 +5,14 @@
 ## Features
 
 - **Adjustable search**: The program looks for listings based on your filters. By applying filters you will get the listings you want.
-- **Automated messaging**: No need to message every single listing. The program does it for you. It adds the owners name too ;)
-- **Personalized messages with ChatGpt (optional)**: Don't worry about being ignored, because you didn't write a personalized message.
+- **Automated messaging**: No need to message every single listing. The program does it for you. It adds the owners name, too. 😉
+- **Personalised messages with ChatGpt (optional)**: Don't worry about being ignored. Personalised messages make it much easier to get your foot in the door, literally.
 
-## Usage
+## Usage And Configuration
 
 ### 1. Automated Apartment Hunt
 
-Specify the filters you want to use. For example: Berlin, flatshare, max. 500€. Enable the filters and copy the url into the `.env` file:
+Go to [WG-Gesucht](https://www.wg-gesucht.de/en/) and search for rooms in your desired city. Specify the filters you want to use. For example: Berlin, flatshare, max. 500€. Enable the filters and copy the url into the `.env` file:
 
 ```env
 FILTER_URL=https://www.wg-gesucht.de/en/wg-zimmer-in-Berlin.8.0.1.0.html?offer_filter=1&city_id=8&sort_order=0&noDeact=1&categories%5B%5D=0&rMax=500
@@ -20,43 +20,43 @@ FILTER_URL=https://www.wg-gesucht.de/en/wg-zimmer-in-Berlin.8.0.1.0.html?offer_f
 
 ### 2. Automated Contacting:
 
-You will need to write a message template in German and English for this to work. You can add one here: [Message Templates](https://www.wg-gesucht.de/en/mein-wg-gesucht-message-templates.html).
+You will need to write a message template in German and English for this to work. The programm detects whether a listing is written in German or English. You can add a template here: [Message Templates](https://www.wg-gesucht.de/en/mein-wg-gesucht-message-templates.html).
 
-> :warning: Add "@owner_name" to the locations you want to address the owner (e.g. Hi @owner_name! ➡️ Hi Sarah!)
+> ⚠️ Add "@owner_name" to the locations you want to address the owner (e.g. Hi @owner_name! ➡️ Hi Sarah!)
 
 Click on a template to copy the id from the url (...template_id=**12345678**) and add it to your `.env`:
 
 ```env
 MESSAGE_ENG=YOUR-TEMPLATE-ID
-MESSAGE_GER=YOUR-TEMPLATE_ID
+MESSAGE_GER=YOUR-TEMPLATE-ID
 ```
 
-The program will log you in to get necessary tokens and cookies, therefore needs your login details:
+The program will log you in to get necessary tokens and cookies, therefore it needs your login details:
 
 ```env
 WGG_USERNAME=YOUR-EMAIL # or username
 WGG_PASSWORD=YOUR-PASSWORD
 ```
 
-### 3. Personalized Messaging with ChatGPT (optional):
+### 3. Personalised Messages with ChatGPT (optional):
 
-**Now to the fun part!**
+**Now to the fun part!** 🥳
 
-I have added the ChatGPT API to this project to personalize your message to the listing. You will need to get a an API key from Open Ai for this. Create one here: [OpenAI Api Key](https://platform.openai.com/account/api-keys) and add it to the `.env`:
+I have added the ChatGPT API to this project, to tailor messages to the listing. You will need to get a an API key from OpenAi for this. Create one here: [OpenAI Api Key](https://platform.openai.com/account/api-keys) and add it to the `.env`:
 
 ```
   OPENAI_API_KEY=REALLY-LONG-KEY
 ```
 
-To make your message even more personalized, you can add some adjectives that describe your character. ChatGPT will take this into consideration and adjust the tonality:
+To make your message even more personalised, you can add adjectives, that describe your character. ChatGPT will take this into consideration and adjust the tonality:
 
 ```env
 CHARACTER='open-minded,friendly'
 ```
 
-## Install
+## Installation
 
-Wanna find a place now? Let's go:
+Wanna find a place now? Good, let's go:
 
 1. Clone this repo to your machine:
    ```bash
@@ -81,7 +81,7 @@ Wanna find a place now? Let's go:
 
 ## Contribute and Collaborate
 
-Wanna add some features? I'm all ears! Here's how you can join the hype:
+Wanna add some features? I'm all ears!
 
 1. Fork this to your GitHub.
 
