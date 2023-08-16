@@ -4,7 +4,7 @@ const db = require("../database/db.js");
 const { getDocument } = require("../services/requests.js");
 
 async function searchListings() {
-  const filterPage = await getDocument();
+  const filterPage = await getDocument(process.env.FILTER_URL);
   const newListings = parseListings(filterPage);
   addListingsToDB(newListings);
 }
