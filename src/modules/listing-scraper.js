@@ -12,18 +12,15 @@ async function searchListings() {
 
 function addListingsToDB(listings) {
   let countListings = listings.length;
-  db.read();
   listings.forEach((listing) => {
-    const listingExists = db.get("listings").includes(listing);
-
+    const listingExists = db.get("listings").find({ id: listing.id});
     if (listingExists) {
       countListings--;
     } else {
-      db.data.listings.push(listing);
+      db.get("listings").push(listing).write();
     }
   });
-  db.write();
-  console.log(`Found ${countListings} new listings!`);
+  console.log(`Added ${countListings} new listings!`);
 }
 
 function parseListings(document) {
@@ -41,8 +38,8 @@ function parseListings(document) {
         "h3.truncate_title.noprint > a"
       );
       const url = titleHTML.attrs.href;
-      const description = titleHTML.attrs.rawText || "";
-      const lang = franc(description, { only: ["eng, deu"] });
+      const description = titleHTML.rawText || "";
+      const lang = franc(description, { only: ["eng", "deu"] });
 
       const listing = {
         id: id,
