@@ -1,7 +1,7 @@
 const Parser = require("node-html-parser");
 const franc = require("franc");
 const db = require("../database/db.js");
-const getDocument = require("../service/requests.js");
+const { getDocument } = require("../services/requests.js");
 
 async function searchListings() {
   const filterPage = await getDocument();
@@ -12,7 +12,7 @@ async function searchListings() {
 function addListingsToDB(listings) {
   let countListings = listings.length;
   listings.forEach((listing) => {
-    const listingExists = db.get("listings").find({ id: listing.id});
+    const listingExists = db.get("listings").find({ id: listing.id });
     if (listingExists) {
       countListings--;
     } else {
