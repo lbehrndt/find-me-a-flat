@@ -1,6 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const winston = require("winston");
+const { ChatGPTAPI } = require("chatgpt");
 
 const logger = winston.createLogger({
   level: "DEBUG",
@@ -85,7 +86,7 @@ async function sendMessage(listingId, message) {
     method: "post",
     url: process.env.SEND_MESSAGE_URL,
     headers: headers,
-    data: message,
+    data: messageData,
   }).then((response) => {
     if (response.status === 200) {
       logger.info("Listing: (", listingId, ") was contacted.");
@@ -93,12 +94,38 @@ async function sendMessage(listingId, message) {
   });
 }
 
-async function generateAiMessage() {}
+async function generateChatGptMessage(description, template, listing) {
+  const chatGpt = new ChatGPTAPI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  const adjectives = getAdjectives();
+
+  const chatGptRequest = `Imagine you are looking for a room. I will give you a description of a listing and a message template. You will rewrite this message based on the provided description. I want it to sound ${adjectives}. Here is the description: "${description}". And here is the message template: "${template}". Based on this, rewrite the message in ${listing.lang}.`;
+
+  const chatGptResponse = await chatGpt.sendMessage(chatGptRequest);
+
+  console.log("Request: ", chatGptRequest);
+  console.log("Response: ", chatGptResponse);
+}
+
+function getAdjectives() {
+  let adjectives = "";
+  const wordsCount = process.env.ADJECTIVES.length;
+  process.env.ADJECTIVES.forEach((adjective, index) => {
+    if (index < wordsCount - 1) {
+      adjectives + adjective + ", ";
+    } else {
+      adjectives + "and " + adjective;
+    }
+  });
+  return adjectives;
+}
 
 module.exports = {
   getDocument,
   login,
   getMessageTemplate,
   sendMessage,
-  generateAiMessage,
+  generateChatGptMessage,
 };
