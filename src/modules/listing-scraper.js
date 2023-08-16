@@ -12,14 +12,16 @@ async function searchListings() {
 function addListingsToDB(listings) {
   let countListings = listings.length;
   listings.forEach((listing) => {
-    const listingExists = db.get("listings").find({ id: listing.id });
+    const listingExists = db.get("listings").find({ id: listing.id }).value();
     if (listingExists) {
       countListings--;
     } else {
       db.get("listings").push(listing).write();
     }
   });
-  console.log(`Added ${countListings} new listings!`);
+  countListings === 0
+    ? console.log(`No new listings!`)
+    : console.log(`Adding ${countListings} new listings...`);
 }
 
 function parseListings(document) {
@@ -31,8 +33,13 @@ function parseListings(document) {
     .querySelectorAll(".wgg_card.offer_list_item") // find listing elements by class
     .forEach((listingHTML) => {
       const id = listingHTML.attrs.id.replace("liste-details-ad-", "");
-      const owner =
+
+      let owner =
         listingHTML.querySelector("span.ml5")?.rawText.replace(/ .*/, "") || ""; // for message to have appropiate name
+      if (owner.charAt(0) === "\n") {
+        owner = "";
+      }
+
       const titleHTML = listingHTML.querySelector(
         "h3.truncate_title.noprint > a"
       );
