@@ -110,16 +110,16 @@ async function generateChatGptMessage(description, template, listing) {
 }
 
 function getAdjectives() {
-  let adjectives = "";
-  const wordsCount = process.env.ADJECTIVES.length;
-  process.env.ADJECTIVES.forEach((adjective, index) => {
-    if (index < wordsCount - 1) {
-      adjectives + adjective + ", ";
-    } else {
-      adjectives + "and " + adjective;
-    }
+  let tonality = "";
+  
+  const adjectives = process.env.TONALITY;
+  const wordsCount = adjectives.length;
+  adjectives.forEach((adjective, index) => {
+    index < wordsCount - 1
+      ? tonality + adjective + ", "
+      : tonality + "and " + adjective;
   });
-  return adjectives;
+  return tonality;
 }
 
 module.exports = {
