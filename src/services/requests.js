@@ -93,4 +93,12 @@ async function sendMessage(listingId, message) {
   });
 }
 
-module.exports = { getDocument, login, getMessageTemplate };
+async function generateAiMessage() {}
+
+module.exports = {
+  getDocument,
+  login,
+  getMessageTemplate,
+  sendMessage,
+  generateAiMessage,
+};
