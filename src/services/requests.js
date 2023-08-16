@@ -1,5 +1,11 @@
 require("dotenv").config();
 const axios = require("axios");
+const winston = require("winston");
+
+const logger = winston.createLogger({
+  level: "DEBUG",
+  transport: [new winston.transports.Console()],
+});
 
 const headers = {
   "content-type": "application/json",
@@ -13,15 +19,16 @@ const loginData = {
   display_language: "de",
 };
 
-async function getDocument() {
+let userData = {};
+
+async function getDocument(url) {
   const listingData = axios({
     method: "get",
-    url: process.env.FILTER_URL,
+    url: url,
     headers: headers,
   })
     .then((response) => {
-      const document = response.data;
-      return document;
+      return response.data;
     })
     .catch((err) => {
       console.error(err);
@@ -38,7 +45,9 @@ async function login() {
   })
     .then((response) => {
       if (response.status === 200) {
-        console.log("Login successful!");
+        logger.info("Login successful");
+        logger.debug(response.data);
+        userData = response.data;
         headers["cookie"] = response.headers["set-cookie"].toString();
       }
     })
@@ -63,4 +72,25 @@ async function getMessageTemplate(messageId) {
   return messageTemplate;
 }
 
-module.exports = { getDocument, getLoginCookie };
+async function sendMessage(listingId, message) {
+  const messageData = {
+    user_id: userData.user_id,
+    csrf_token: userData.csrf_token,
+    messages: [{ content: message, message_type: "text " }],
+    ad_type: "0",
+    ad_id: listingId,
+  };
+
+  return axios({
+    method: "post",
+    url: process.env.SEND_MESSAGE_URL,
+    headers: headers,
+    data: message,
+  }).then((response) => {
+    if (response.status === 200) {
+      logger.info("Listing: (", listingId, ") was contacted.");
+    }
+  });
+}
+
+module.exports = { getDocument, login, getMessageTemplate };
