@@ -27,6 +27,7 @@
     "dotenv": "^16.3.1",
     "franc": "^4.1.0",
     "lowdb": "^1.0.0",
-    "node-html-parser": "^6.1.5"
+    "node-html-parser": "^6.1.5",
+    "winston": "^3.10.0"
   }
 }
