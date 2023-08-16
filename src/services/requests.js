@@ -87,21 +87,26 @@ async function sendMessage(listingId, message) {
     url: process.env.SEND_MESSAGE_URL,
     headers: headers,
     data: messageData,
-  }).then((response) => {
-    if (response.status === 200) {
-      logger.info("Listing: (", listingId, ") was contacted.");
-    }
-  });
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        logger.info("Contacted listing:", listingId);
+        return true;
+      }
+    })
+    .catch((err) => {
+      return false;
+    });
 }
 
-async function generateChatGptMessage(description, template, listing) {
+async function generateChatGptMessage(description, template, language) {
   const chatGpt = new ChatGPTAPI({
     apiKey: process.env.OPENAI_API_KEY,
   });
 
   const adjectives = getAdjectives();
 
-  const chatGptRequest = `Imagine you are looking for a room. I will give you a description of a listing and a message template. You will rewrite this message based on the provided description. I want it to sound ${adjectives}. Here is the description: "${description}". And here is the message template: "${template}". Based on this, rewrite the message in ${listing.lang}.`;
+  const chatGptRequest = `Imagine you are looking for a room. I will give you a description of a listing and a message template. You will rewrite this message based on the provided description. I want it to sound ${adjectives}. Here is the description: "${description}". And here is the message template: "${template}". Based on this, rewrite the message in ${language}.`;
 
   const chatGptResponse = await chatGpt.sendMessage(chatGptRequest);
 
