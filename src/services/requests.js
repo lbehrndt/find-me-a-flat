@@ -111,8 +111,8 @@ async function generateChatGptMessage(description, template, listing) {
 
 function getAdjectives() {
   let tonality = "";
-  
-  const adjectives = process.env.TONALITY;
+
+  const adjectives = process.env.TONALITY.split(",");
   const wordsCount = adjectives.length;
   adjectives.forEach((adjective, index) => {
     index < wordsCount - 1
