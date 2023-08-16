@@ -1,4 +1,3 @@
-require("dotenv").config();
 const Parser = require("node-html-parser");
 const franc = require("franc");
 const db = require("../database/db.js");
