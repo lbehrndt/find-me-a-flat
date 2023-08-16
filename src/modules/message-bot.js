@@ -1,17 +1,43 @@
-const Parser = require("node-html-parser");
-const { getMessageTemplate, getDocument } = require("../services/requests");
+const {
+  getMessageTemplate,
+  generateChatGptMessage,
+  sendMessage,
+} = require("../services/requests");
 
 async function contactListing(listing) {
-  const url = process.env.BASE_URL + listing.url;
-  const listingPage = await getDocument(url);
-  const description = parseDescription(listingPage);
-  //const messageTemplate = getMessageTemplate();
+  prepareMessageTemplate(listing.lang, listing.owner).then(
+    async (messageTemplate) => {
+      const message = process.env.CHATGPT_MESSAGE
+        ? await generateChatGptMessage(
+            listing.desciption,
+            messageTemplate,
+            listing.language
+          )
+        : messageTemplate;
+
+      const messageSent = await sendMessage(listing.id, message);
+
+      if (messageSent) {
+        db.get("listings")
+          .find({ id: listing.id })
+          .assign({
+            message: {
+              messageSent: 1,
+              content: message,
+            },
+          })
+          .write();
+      }
+    }
+  );
 }
 
-async function parseDescription(document) {
-  const removedBRs = document.replaceAll("<br>" || "</br>" || "<br/>", "");
-
-  console.log(removedBRs);
+async function prepareMessageTemplate(language, owner) {
+  const messageTemplateId =
+    language === "eng" ? process.env.MESSAGE_ENG : process.env.MESSAGE_GER;
+  const messageTemplate = await getMessageTemplate(messageTemplateId);
+  messageTemplate.replaceAll("@owner_name", owner);
+  return messageTemplate;
 }
 
 module.exports = contactListing;
