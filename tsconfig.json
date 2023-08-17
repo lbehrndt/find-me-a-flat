@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "outDir": "./build",
-    "allowJs": true,
-    "target": "ESNext",
-    "sourceMap": true,
-    "module": "CommonJS",
+    "module": "commonjs",
     "allowSyntheticDefaultImports": true,
-
+    "target": "ESNext",
+    "lib": [
+      "ESNext"
+    ],
+    "sourceMap": true,
+    "rootDir": "src",
   },
   "include": ["./src/**/*"]
 }
