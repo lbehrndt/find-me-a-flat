@@ -5,7 +5,8 @@
     "target": "ESNext",
     "sourceMap": true,
     "module": "CommonJS",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+
   },
   "include": ["./src/**/*"]
 }
