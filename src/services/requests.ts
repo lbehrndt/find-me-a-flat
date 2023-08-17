@@ -1,7 +1,9 @@
 import axios from "axios";
 import {headers, logger, loginData} from "../app";
 import {UserData} from "../models/UserData";
-import {ChatGPTAPI} from "chatgpt";
+import OpenAI from 'openai';
+
+
 
 // Local Data
 export let userData: UserData;
@@ -77,15 +79,17 @@ export async function sendMessage(listingId: String, message: String) {
         });
 }
 export async function generateChatGptMessage(description: String, template: String, language: String) {
-    const chatGpt = new ChatGPTAPI({
-        apiKey: process.env.OPENAI_API_KEY,
+    const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY
     });
 
     const adjectives = getAdjectives();
-
     const chatGptRequest = `Imagine you are looking for a room. I will give you a description of a listing and a message template. You will rewrite this message based on the provided description. I want it to sound ${adjectives}. Here is the description: "${description}". And here is the message template: "${template}". Based on this, rewrite the message in ${language}.`;
-
-    const chatGptResponse = await chatGpt.sendMessage(chatGptRequest);
+    const completion = await openai.chat.completions.create({
+        messages: [{ role: 'user', content: chatGptRequest }],
+        model: 'gpt-3.5-turbo',
+    });
+    const chatGptResponse = completion.choices[0].message.content;
 
     logger.debug("Request: ", chatGptRequest);
     logger.debug("Response: ", chatGptResponse);
