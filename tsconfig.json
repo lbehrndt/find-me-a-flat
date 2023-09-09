@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
+    "types": ["bun-types"],
     "outDir": "./build",
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "target": "ESNext",
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "sourceMap": true,
-    "rootDir": "src",
+    "rootDir": "src"
   },
   "include": ["./src/**/*"]
 }

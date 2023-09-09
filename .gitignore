@@ -1,3 +1,6 @@
+# SQL
+listingdb.sqlite
+
 # Logs
 logs
 *.log
@@ -135,5 +138,6 @@ db.json
 ## Build
 build
 
-## MacOS
+# OS generated files
 .DS_Store
+Thumbs.db
