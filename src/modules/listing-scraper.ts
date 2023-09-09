@@ -32,6 +32,7 @@ function addListingsToDB(listings: Listening[]) {
 async function parseListings(document: string) {
     logger.info('Looking for new listings...');
     const allListings: Listening[] = [];
+    
     for (const listingHTML of parse(document)
         .querySelectorAll('.wgg_card.offer_list_item')) {
             const id = listingHTML.attrs.id.replace("liste-details-ad-", "");
