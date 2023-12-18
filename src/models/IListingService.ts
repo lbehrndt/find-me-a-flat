@@ -1,9 +1,8 @@
-type MessageSent = Pick<IListingMessage, "messageSent">;
-
+type MessageSentFilter = Pick<ListingMessage, "messageSent">;
 interface IListingService {
-  getListing(id: string): IListing;
-  getListings(filter?: MessageSent): IListing[];
-  createListing(listing: IListing): void;
-  createListings(listings: IListing[]): void;
-  updateListing(listing: IListing): void;
+  getListing(id: string): Listing;
+  getListings(filter?: MessageSentFilter): Listing[];
+  createListing(listing: Listing): void;
+  createListings(listings: Listing[]): void;
+  updateListing(listing: Listing): void;
 }

@@ -1,33 +1,57 @@
-import {generateChatGptMessage, getMessageTemplate, sendMessage} from "../services/requests";
-import {db} from "../database/db";
+import Requests from "../services/requests.service";
+import ListingService from "../services/listings.service";
+export default class MessageBot {
+  DBService: ListingService;
+  listings: Listing[];
 
-export async function contactListing(listing: Listening) {
-    prepareMessageTemplate(listing.lang, listing.owner).then(
-        async (messageTemplate) => {
-            const message = process.env.CHATGPT_MESSAGE
-                ? await generateChatGptMessage(
-                    listing.description,
-                    messageTemplate,
-                    listing.lang
-                )
-                : messageTemplate;
+  constructor() {
+    this.DBService = new ListingService();
+    this.listings = this.DBService.getListings({ messageSent: false });
+    for (const listing of this.listings) this.contactListing(listing);
+  }
 
-            const messageSent = await sendMessage(listing.id, message);
+  private async contactListing(listing: Listing) {
+    let message = await this.prepareMessageTemplate(
+      listing.lang,
+      listing.owner
+    );
 
-            if (messageSent)
-                db.get('listings').find(value => value.id == listing.id).update('message', value => {
-                    return {
-                        messageSent: true, content: message,
-                    };
-                })
-        });
+    if (Bun.env.CHATGPT_MESSAGE) {
+      message = await Requests.generateChatGptMessage({
+        listingLanguage: listing.lang,
+        listingDescription: listing.description,
+        messageTemplate: message,
+      });
+    }
 
-}
+    this.sendMessage(listing, message);
+  }
 
-async function prepareMessageTemplate(language: String, owner: String) {
+  private async sendMessage(listing: Listing, message: MessageContent) {
+    const messageSent = await Requests.sendMessage(listing.id, message);
+
+    if (messageSent) {
+      const messageData: ListingMessage = {
+        messageSent: true,
+        messageContent: message,
+      };
+
+      listing.message = messageData;
+
+      this.DBService.updateListing(listing);
+    }
+  }
+
+  private async prepareMessageTemplate(
+    owner: ListingOwner,
+    language: ListingLanguage
+  ) {
     const messageTemplateId =
-        language === "eng" ? process.env.MESSAGE_ENG : process.env.MESSAGE_GER;
-    const messageTemplate = await getMessageTemplate(messageTemplateId);
+      language === "eng" ? Bun.env.MESSAGE_ENG : Bun.env.MESSAGE_GER;
+    const messageTemplate = await Requests.getMessageTemplate(
+      messageTemplateId
+    );
     messageTemplate.replaceAll("@owner_name", owner);
     return messageTemplate;
+  }
 }

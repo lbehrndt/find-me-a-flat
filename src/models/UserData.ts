@@ -1,5 +1,4 @@
-export interface UserData {
-    user_id: String;
-    csrf_token: String;
-
-}
+export type UserData = {
+  user_id: string;
+  csrf_token: string;
+};
